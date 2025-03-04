@@ -64,7 +64,8 @@ export const shoutIfExclaiming = (messages: string[]): string[] => {
  * 4 letters long.
  */
 export function countShortWords(words: string[]): number {
-    return 0;
+    const shortWords = words.filter((word: string): boolean => word.length < 4);
+    return shortWords.length;
 }
 
 /**
@@ -73,7 +74,10 @@ export function countShortWords(words: string[]): number {
  * then return true.
  */
 export function allRGB(colors: string[]): boolean {
-    return false;
+    return colors.every(
+        (color: string): boolean =>
+            color === "red" || color === "blue" || color === "green",
+    );
 }
 
 /**
@@ -84,7 +88,9 @@ export function allRGB(colors: string[]): boolean {
  * And the array [] would become "0=0".
  */
 export function makeMath(addends: number[]): string {
-    return "";
+    const sum = addends.reduce((total, num) => total + num, 0);
+    const strRep = addends.length > 0 ? addends.join("+") : "0";
+    return sum.toString() + "=" + strRep;
 }
 
 /**
@@ -97,5 +103,22 @@ export function makeMath(addends: number[]): string {
  * And the array [1, 9, 7] would become [1, 9, 7, 17]
  */
 export function injectPositive(values: number[]): number[] {
-    return [];
+    const sumUpTo = (arr: number[]): number =>
+        arr.reduce((acc, num) => acc + num, 0);
+
+    const indexOfFirstNegative = values.findIndex((num) => num < 0);
+
+    if (indexOfFirstNegative !== -1) {
+        const sumBeforeNegative = sumUpTo(
+            values.slice(0, indexOfFirstNegative),
+        );
+        return [
+            ...values.slice(0, indexOfFirstNegative + 1),
+            sumBeforeNegative,
+            ...values.slice(indexOfFirstNegative + 1),
+        ];
+    } else {
+        const totalSum = sumUpTo(values);
+        return [...values, totalSum];
+    }
 }
